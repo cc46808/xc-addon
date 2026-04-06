@@ -200,7 +200,7 @@ builder.defineStreamHandler(({ type, id, config }) => {
     });
 });
 
-function renderConfigPage(origin) {
+function renderConfigPage() {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -406,7 +406,7 @@ function renderConfigPage(origin) {
         const installLink = document.getElementById('installLink');
         const manifestLink = document.getElementById('manifestLink');
         const manifestUrlNode = document.getElementById('manifestUrl');
-        const origin = ${JSON.stringify(origin)};
+        const origin = window.location.origin;
 
         function buildManifestUrl() {
             const formData = new FormData(form);
@@ -445,11 +445,8 @@ const addonRouter = getRouter(addonInterface);
 const app = express();
 
 app.get(['/', '/configure'], (req, res) => {
-    const forwardedProto = (req.get('x-forwarded-proto') || req.protocol || 'http').split(',')[0].trim();
-    const forwardedHost = (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim();
-    const origin = `${forwardedProto}://${forwardedHost}`;
     res.setHeader('content-type', 'text/html; charset=utf-8');
-    res.end(renderConfigPage(origin));
+    res.end(renderConfigPage());
 });
 
 app.use(addonRouter);
