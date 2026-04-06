@@ -372,9 +372,9 @@ function renderConfigPage() {
 <body>
     <main class="card">
         <h1>Configure XC Addon</h1>
-        <p>Enter your Xtream Code server details below. This page generates a private addon manifest URL tied to your credentials and gives you a Stremio install link directly from this domain.</p>
+        <p>Enter your Xtream Code server details below then click <strong>Install In Stremio</strong>. You can also copy the addon's manifest URL from the box below and paste it into Stremio's <em>Search addon by URL</em> field — Stremio will then show a <strong>Configure</strong> button in‑app.</p>
 
-        <form id="configForm" class="grid">
+        <form id="configForm" class="grid" onsubmit="return false;">
             <div class="field full">
                 <label for="serverUrl">XC Server URL</label>
                 <input id="serverUrl" name="serverUrl" type="text" placeholder="https://provider.example.com" required>
@@ -422,13 +422,24 @@ function renderConfigPage() {
             installLink.href = 'stremio://' + manifestUrl.replace(/^https?:\/\//, '');
         }
 
-        installLink.addEventListener('click', event => {
-            if (!form.reportValidity()) {
-                event.preventDefault();
-                return;
-            }
-
+        // Primary: form submit navigates the page to the stremio:// URL so Stremio
+        // intercepts it both in the embedded configure webview and when triggered from
+        // a standalone browser session.
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!form.reportValidity()) return;
             updateLinks();
+            const manifestUrl = buildManifestUrl();
+            window.location = 'stremio://' + manifestUrl.replace(/^https?:\/\//, '');
+        });
+
+        // Fallback button still works for manual copy / direct open
+        installLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!form.reportValidity()) return;
+            updateLinks();
+            const manifestUrl = buildManifestUrl();
+            window.location = 'stremio://' + manifestUrl.replace(/^https?:\/\//, '');
         });
 
         form.addEventListener('input', updateLinks);
