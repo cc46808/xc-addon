@@ -445,7 +445,9 @@ const addonRouter = getRouter(addonInterface);
 const app = express();
 
 app.get(['/', '/configure'], (req, res) => {
-    const origin = `${req.protocol}://${req.get('host')}`;
+    const forwardedProto = (req.get('x-forwarded-proto') || req.protocol || 'http').split(',')[0].trim();
+    const forwardedHost = (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim();
+    const origin = `${forwardedProto}://${forwardedHost}`;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.end(renderConfigPage(origin));
 });
