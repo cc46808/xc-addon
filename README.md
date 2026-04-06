@@ -6,7 +6,7 @@ A [Stremio](https://www.stremio.com/) addon that parses and plays Xtream Code (X
 
 - **Catalog Handler** – Returns a movie catalog sourced from Xtream Code.
 - **Stream Handler** – Maps a catalog item ID to its Xtream Code stream URL.
-- **Configuration Screen** – Stremio users can enter their XC server URL, username, and password before installation.
+- **Configuration Screen** – The root URL hosts a setup page where users enter their XC server URL, username, and password.
 - Listens on `PORT` environment variable (default: `7000`).
 - Exposes `/manifest.json` as required by Stremio.
 
@@ -37,13 +37,13 @@ Open the following URLs in a browser or with `curl` to verify the addon is worki
 
 | Endpoint | Description |
 | --- | --- |
-| `http://localhost:7000/manifest.json` | Addon manifest |
-| `http://localhost:7000/configure` | Stremio-compatible configuration page |
+| `http://localhost:7000/` | Root configuration page |
+| `http://localhost:7000/manifest.json` | Base addon manifest |
 
 To add the addon to Stremio, open:
 
 ```text
-http://localhost:7000/configure
+http://localhost:7000/
 ```
 
 in the Stremio app (Settings -> Addons -> Add addon), then enter:
@@ -52,7 +52,7 @@ in the Stremio app (Settings -> Addons -> Add addon), then enter:
 - XC username
 - XC password
 
-After configuration, Stremio will install a user-specific manifest URL automatically.
+After configuration, the page generates a user-specific manifest URL and a Stremio install link automatically.
 
 ## Deploy with Docker
 
@@ -89,8 +89,8 @@ beamup
 BeamUp will build and host the addon and return a public HTTPS URL, e.g.:
 `https://<your-id>.beamup.dev/manifest.json`
 
-Use the addon's `/configure` URL to install it in Stremio so each user can enter their credentials, for example:
-`https://<your-id>.beamup.dev/configure`
+Use the addon's root URL to install it in Stremio so each user can enter their credentials, for example:
+`https://<your-id>.beamup.dev/`
 
 After configuration, use the generated manifest URL in Stremio or submit it to the
 [Stremio Addon Central](https://stremio-addon-manager.now.sh/).
