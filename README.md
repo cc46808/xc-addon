@@ -6,6 +6,7 @@ A [Stremio](https://www.stremio.com/) addon that parses and plays Xtream Code (X
 
 - **Catalog Handler** – Returns a movie catalog sourced from Xtream Code.
 - **Stream Handler** – Maps a catalog item ID to its Xtream Code stream URL.
+- **Configuration Screen** – Stremio users can enter their XC server URL, username, and password before installation.
 - Listens on `PORT` environment variable (default: `7000`).
 - Exposes `/manifest.json` as required by Stremio.
 
@@ -35,18 +36,23 @@ The addon will be available at `http://localhost:7000`.
 Open the following URLs in a browser or with `curl` to verify the addon is working:
 
 | Endpoint | Description |
-|---|---|
+| --- | --- |
 | `http://localhost:7000/manifest.json` | Addon manifest |
-| `http://localhost:7000/catalog/movie/xc-movies.json` | Movie catalog |
-| `http://localhost:7000/stream/movie/xc:1.json` | Stream for item `xc:1` |
+| `http://localhost:7000/configure` | Stremio-compatible configuration page |
 
 To add the addon to Stremio, open:
 
-```
-http://localhost:7000/manifest.json
+```text
+http://localhost:7000/configure
 ```
 
-in the Stremio app (Settings → Addons → Add addon).
+in the Stremio app (Settings -> Addons -> Add addon), then enter:
+
+- XC server URL
+- XC username
+- XC password
+
+After configuration, Stremio will install a user-specific manifest URL automatically.
 
 ## Deploy with Docker
 
@@ -83,12 +89,15 @@ beamup
 BeamUp will build and host the addon and return a public HTTPS URL, e.g.:
 `https://<your-id>.beamup.dev/manifest.json`
 
-Use that URL to install the addon in Stremio or submit it to the
+Use the addon's `/configure` URL to install it in Stremio so each user can enter their credentials, for example:
+`https://<your-id>.beamup.dev/configure`
+
+After configuration, use the generated manifest URL in Stremio or submit it to the
 [Stremio Addon Central](https://stremio-addon-manager.now.sh/).
 
 ## Project Structure
 
-```
+```text
 xc-addon/
 ├── addon.js        # Main addon code (manifest, catalog & stream handlers)
 ├── package.json    # Node.js project metadata and dependencies
