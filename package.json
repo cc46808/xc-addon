@@ -1,0 +1,13 @@
+{
+  "name": "xc-addon",
+  "version": "1.0.0",
+  "description": "Stremio addon for Xtream Code (XC) URLs - provides streams for live TV, movies, and series",
+  "main": "addon.js",
+  "scripts": {
+    "start": "node addon.js"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "^1.6.10"
+  },
+  "license": "MIT"
+}
